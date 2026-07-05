@@ -1,4 +1,5 @@
 local Water = require("src.water")
+local ScreenScroll = require("src.screenScroll")
 
 function _config()
     ---@type Usagi.Config
@@ -17,6 +18,7 @@ end
 
 function _update(dt)
     Time += dt
+    ScreenScroll.scrollInputProcess(dt)
     Water.update(dt)
 end
 

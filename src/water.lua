@@ -1,6 +1,7 @@
 local M = {}
 
 local GravMoon = require("src.gravMoon")
+local ScreenScroll = require("src.screenScroll")
 
 local ypoints = {}
 local prevYpoints = {}
@@ -117,7 +118,8 @@ end
 
 function M.draw()
     for i = 1, rectCount do
-        gfx.rect_fill((rectWidth * i) - rectWidth, ypoints[i], rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE, 1)
+        ScreenScroll.rect_fill((rectWidth * i) - rectWidth, ypoints[i], rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
+            1)
     end
 end
 
