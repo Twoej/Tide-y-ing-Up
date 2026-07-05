@@ -1,5 +1,6 @@
 local Water = require("src.water")
 local ScreenScroll = require("src.screenScroll")
+local GravMoon = require("src.gravMoon")
 
 function _config()
     ---@type Usagi.Config
@@ -24,6 +25,7 @@ end
 
 function _draw(dt)
     gfx.clear(gfx.COLOR_BLACK)
-    ScreenScroll.sspr(0, 0, 640, 360, 0, 0, 1, true)
+    ScreenScroll.sspr(0, 64, 640, 360, 0, 0, 1, true)
+    GravMoon.draw()
     Water.draw()
 end
