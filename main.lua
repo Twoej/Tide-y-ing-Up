@@ -24,5 +24,6 @@ end
 
 function _draw(dt)
     gfx.clear(gfx.COLOR_BLACK)
+    ScreenScroll.sspr(0, 0, 640, 360, 0, 0, 1, true)
     Water.draw()
 end
