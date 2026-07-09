@@ -1,6 +1,6 @@
 local M = {}
 
-local GravMoon = require("src.gravMoon")
+local Moon = require("src.moon")
 local ScreenScroll = require("src.screenScroll")
 
 local ypoints = {}
@@ -14,7 +14,7 @@ local rectWidth = 2
 local rectCount = 0
 local waves = false
 local rise = true
-local gravEffect = 10
+local gravEffect = 15
 local baseGrav = 0.45
 local reverseGravEffect = 0.004
 local gravDistance = 30
@@ -32,7 +32,7 @@ end
 
 local function gravityCalc(waterIndex)
     local moonPos = { 0, 0 }
-    moonPos["x"], moonPos["y"] = GravMoon.getPos()
+    moonPos["x"], moonPos["y"] = Moon.getPos(1)
     local dist = util.vec_dist(moonPos, { ["x"] = waterIndex * rectWidth, ["y"] = prevYpoints[waterIndex] })
     local gravity = 0
     if (dist > 250) then

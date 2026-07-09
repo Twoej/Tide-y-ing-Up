@@ -72,8 +72,12 @@ end
 
 function M.spr(index, x, y, alpha)
     if (checkIfDraw(x, y, 16, 16)) then
-        gfx.spr(index, x, y, alpha)
+        gfx.spr(index, x - screenLocation["x"], y - screenLocation["y"], alpha)
     end
+end
+
+function M.getScreenLocation()
+    return screenLocation["x"], screenLocation["y"]
 end
 
 return M
