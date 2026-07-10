@@ -38,7 +38,7 @@ function M.addMoon(x, y, sx, sy, w, h, id)
 end
 
 function M.init()
-    M.addMoon(20, 20, 0, 0, 64, 64, MouseHandler.getClickableCount() + 1)
+    M.addMoon(20, 20, 0, 0, 64, 64, AssignId())
     MouseHandler.addToClickable(20, 20, 64, 64, 1, MouseHandler.getClickableCount() + 1, recursionfix.clicked)
 end
 

@@ -27,7 +27,7 @@ end
 local function clicked(n)
     for i, relic in ipairs(relicList) do
         if (relic[5] == n) then
-            relicList[i]["clicked"] = true
+            relicList[i]["found"] = true
             relicList[i]["fading"] = true
             MouseHandler.removeFromClickable(n)
             return
@@ -36,7 +36,13 @@ local function clicked(n)
 end
 
 function M.init()
-    addToRelicList(50, 50, 64, 0, false, 5, 16, 16, MouseHandler.getClickableCount() + 1, false, true)
+    addToRelicList(50, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(80, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(110, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(150, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(170, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(190, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(210, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
     for _, relic in ipairs(relicList) do
         if (relic["visible"]) then
             MouseHandler.addToClickable(relic[1], relic[2], relic[6], relic[7], MouseHandler.getClickableCount() + 1,
@@ -68,6 +74,18 @@ function M.draw()
             end
         end
     end
+end
+
+function M.getRelicFromList(n)
+    return relicList[n]
+end
+
+function M.getRelicListLength()
+    local count = 0
+    for _, relic in ipairs(relicList) do
+        count += 1
+    end
+    return count
 end
 
 return M

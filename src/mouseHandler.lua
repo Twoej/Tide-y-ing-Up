@@ -4,6 +4,8 @@ local ScreenScroll = require("src.screenScroll")
 
 local clickable = {}
 
+local clickableStored = {}
+
 local held = {}
 
 local isHolding = false
@@ -73,6 +75,20 @@ function M.removeFromClickable(id)
             table.remove(clickable, i)
         end
     end
+end
+
+function M.storeAndClearList()
+    for i, obj in ipairs(clickable) do
+        clickableStored[i] = obj
+    end
+    clickable = {}
+end
+
+function M.restoreList()
+    for i, obj in ipairs(clickableStored) do
+        clickable[i] = obj
+    end
+    clickableStored = {}
 end
 
 return M

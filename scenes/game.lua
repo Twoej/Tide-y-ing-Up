@@ -3,7 +3,6 @@ local M = {}
 local Water = require("src.water")
 local ScreenScroll = require("src.screenScroll")
 local Moon = require("src.moon")
-local MouseHandler = require("src.mouseHandler")
 local Relic = require("src.relic")
 
 Time = 0
@@ -24,9 +23,10 @@ function M.update(dt)
     Time += dt
     ScreenScroll.scrollInputProcess(dt)
     Water.update(dt)
-    MouseHandler.checkMouseClick()
-    MouseHandler.checkMouseHold()
     Relic.update(dt)
+    if (input.key_pressed(input.KEY_TAB)) then
+        SwitchScenes("RelicList", true)
+    end
 end
 
 function M.draw(dt)

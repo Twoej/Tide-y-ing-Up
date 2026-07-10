@@ -3,14 +3,23 @@ function _config()
     return { name = "Game", game_id = "com.usagiengine.YOURGAMENAME" }
 end
 
-local scenes = { MainMenu = require("scenes.mainMenu"), Game = require("scenes.game") }
+local MouseHandler = require("src.mouseHandler")
+
+local scenes = { MainMenu = require("scenes.mainMenu"), Game = require("scenes.game"), RelicList = require("scenes.relicList") }
 
 Time = 0
 
+local currentIdNumber = 0
 
-function SwitchScenes(key)
-    local newScene = scenes[key]
+function AssignId()
+    currentIdNumber += 1
+    return currentIdNumber
+end
+
+
+function SwitchScenes(key, init)
     State.pendingScene = key
+    State.doInit = init
 end
 
 function _init()
@@ -18,7 +27,7 @@ function _init()
     -- Stash mutable game state in a capitalized global like `State` so it
     -- survives reloads; F5 calls _init again to reset.
     State = {}
-    SwitchScenes("MainMenu")
+    SwitchScenes("MainMenu", true)
 end
 
 function _update(dt)
@@ -28,9 +37,13 @@ function _update(dt)
         end
         State.currentScene = State.pendingScene
         State.pendingScene = nil
-        scenes[State.currentScene].init()
+        if (State.doInit) then
+            scenes[State.currentScene].init()
+        end
     end
     scenes[State.currentScene].update(dt)
+    MouseHandler.checkMouseClick()
+    MouseHandler.checkMouseHold()
 end
 
 function _draw(dt)
