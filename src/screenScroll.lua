@@ -76,6 +76,12 @@ function M.spr(index, x, y, alpha)
     end
 end
 
+function M.tri_fill(x1, y1, x2, y2, x3, y3, xSize, ySize, color, alpha)
+    if (checkIfDraw(x1, y2, xSize, ySize)) then
+        gfx.tri_fill(x1 - screenLocation["x"], y1 - screenLocation["y"], x2 - screenLocation["x"], y2 - screenLocation["y"], x3 - screenLocation["x"], y3 - screenLocation["y"], color, alpha)
+    end
+end
+
 function M.getScreenLocation()
     return screenLocation["x"], screenLocation["y"]
 end

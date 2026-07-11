@@ -15,12 +15,12 @@ local rectCount = 0
 local waves = false
 local rise = true
 local gravEffect = 15
-local baseGrav = 0.45
+local baseGrav = 0.40
 local reverseGravEffect = 0.004
 local gravDistance = 30
 local greaterGravDistance = 100
 local yMax = 60
-local yMin = 170
+local yMin = 360
 
 local xWater = 200
 local yWater = 100
@@ -28,23 +28,23 @@ local yWater = 100
 function M.init()
     rectCount = waterSize / rectWidth
     for i = 1, rectCount do
-        ypoints[i] = 100
-        prevYpoints[i] = 100
+        ypoints[i] = yWater
+        prevYpoints[i] =  yWater
     end
 end
 
 local function gravityCalc(waterIndex)
     local moonPos = { 0, 0 }
     moonPos["x"], moonPos["y"] = Moon.getPos(1)
-    local dist = util.vec_dist(moonPos, { ["x"] = waterIndex * rectWidth, ["y"] = prevYpoints[waterIndex] })
+    local yDist = math.abs(moonPos["y"] - prevYpoints[waterIndex])
     local gravity = 0
-    if (dist > 250) then
-        gravity += 0.2
+    if (yDist > 70) then
         return gravity
     end
-    local xDist = math.abs(moonPos["x"] - (waterIndex * rectWidth))
+    local xDist = math.abs(moonPos["x"] - (waterIndex * rectWidth) - xWater)
+    local dist = math.sqrt((xDist ^ 2) + (yDist ^ 2))
     if (xDist < gravDistance) then
-        gravity += -((gravEffect * (1 / dist)) + baseGrav)
+        gravity -= ((gravEffect * (1 / dist)) + baseGrav)
     else
         gravity += (reverseGravEffect * dist) - baseGrav
     end
@@ -121,7 +121,7 @@ end
 
 function M.draw()
     for i = 1, rectCount do
-        ScreenScroll.rect_fill((rectWidth * i) - rectWidth + xWater, ypoints[i] + yWater, rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
+        ScreenScroll.rect_fill((rectWidth * i) - rectWidth + xWater, ypoints[i] + yWater, rectWidth, 500 - ypoints[i], gfx.COLOR_DARK_BLUE,
             1)
     end
 end
