@@ -9,7 +9,7 @@ local defaultChance = 0.5
 local waveChance = 0.25
 local riseChance = 0
 local riseIntensity = 0.006
-local waterSize = 320
+local waterSize = 450
 local rectWidth = 2
 local rectCount = 0
 local waves = false
@@ -23,7 +23,7 @@ local yMax = 60
 local yMin = 170
 
 local xWater = 200
-local yWater = 200
+local yWater = 100
 
 function M.init()
     rectCount = waterSize / rectWidth
@@ -121,7 +121,7 @@ end
 
 function M.draw()
     for i = 1, rectCount do
-        ScreenScroll.rect_fill((rectWidth * i) - rectWidth + xWater, ypoints[i], rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
+        ScreenScroll.rect_fill((rectWidth * i) - rectWidth + xWater, ypoints[i] + yWater, rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
             1)
     end
 end
