@@ -36,7 +36,7 @@ local function clicked(n)
 end
 
 function M.init()
-    addToRelicList(50, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(40, 110, 64, 0, false, 5, 16, 16, AssignId(), false, false)
     addToRelicList(80, 50, 80, 0, false, 6, 16, 16, AssignId(), false, true)
     addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true)
     addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true)
@@ -100,6 +100,17 @@ function M.getRelicListLength()
         count += 1
     end
     return count
+end
+
+function M.setVisible(n, visible)
+    relicList[n]["visible"] = visible
+    if visible then
+        MouseHandler.addToClickable(relicList[n][1], relicList[n][2], relicList[n][6], relicList[n][7], MouseHandler.getClickableCount() + 1,
+        relicList[n][5],
+        clicked)
+    else
+        MouseHandler.removeFromClickable(relicList[n][5])
+    end
 end
 
 return M

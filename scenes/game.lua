@@ -4,6 +4,7 @@ local Water = require("src.water")
 local ScreenScroll = require("src.screenScroll")
 local Moon = require("src.moon")
 local Relic = require("src.relic")
+local EtherealObject = require("src.etherealObject")
 
 Time = 0
 
@@ -14,6 +15,7 @@ function M.init()
     Moon.init()
     Water.init()
     Relic.init()
+    EtherealObject.init()
 end
 
 function M.close()
@@ -24,6 +26,7 @@ function M.update(dt)
     ScreenScroll.scrollInputProcess(dt)
     Water.update(dt)
     Relic.update(dt)
+    EtherealObject.update(dt)
     if (input.key_pressed(input.KEY_TAB)) then
         SwitchScenes("RelicList", true)
     end
@@ -31,9 +34,10 @@ end
 
 function M.draw(dt)
     ScreenScroll.sspr(0, 64, 640, 360, 0, 0, 1, true)
-    Moon.draw()
-    Water.draw()
     Relic.draw()
+    EtherealObject.draw()
+    Moon.draw(dt)
+    Water.draw()
 end
 
 return M

@@ -76,8 +76,18 @@ function M.spr(index, x, y, alpha)
     end
 end
 
-function M.tri_fill(x1, y1, x2, y2, x3, y3, xSize, ySize, color, alpha)
-    if (checkIfDraw(x1, y2, xSize, ySize)) then
+function M.tri_fill(x1, y1, x2, y2, x3, y3, color, alpha)
+    local xMax = x1
+    local xMin = x1
+    local yMax = y1
+    local yMin = y1
+    if x2 > xMax then xMax = x2 else xMin = x2 end
+    if y2 > yMax then yMax = y2 else yMin = y2 end
+    if x3 > xMax then xMax = x3 elseif x3 < xMin then xMin = x3 end
+    if y3 > yMax then yMax = y3 elseif y3 < yMin then yMin = y3 end
+    local xSize = xMax - xMin
+    local ySize = yMax - yMin
+    if (checkIfDraw(xMin, yMin, xSize, ySize)) then
         gfx.tri_fill(x1 - screenLocation["x"], y1 - screenLocation["y"], x2 - screenLocation["x"], y2 - screenLocation["y"], x3 - screenLocation["x"], y3 - screenLocation["y"], color, alpha)
     end
 end

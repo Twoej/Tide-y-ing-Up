@@ -49,20 +49,25 @@ function M.init()
     MouseHandler.addToClickable(180, 20, 64, 64, MouseHandler.getClickableCount() + 1, currentMoons[3][7], recursionfix.clicked)
 end
 
-local function updateAlpha(alpha)
-    local timeMod2 = Time % 2
-    if (math.floor(timeMod2) == 0) then
-        alpha += (timeMod2 / 2)
+local function updateAlpha(alpha, dt)
+    local timeMod4 = Time % 4
+    if (timeMod4 < 2) then
+        alpha += dt / 8
     else
-        alpha -= (timeMod2 / 2)
+        alpha -= dt / 8
+    end
+    if (alpha < 0) then
+        alpha = 0
     end
     return alpha
 end
 
-function M.draw()
-    lightAlpha = updateAlpha(lightAlpha)
-    ScreenScroll.tri_fill(currentMoons[3][1] - 50 + 32, currentMoons[3][2] + 80 + 32, currentMoons[3][1] + 32, currentMoons[3][2] + 32, currentMoons[3][1] + 50 + 32, currentMoons[3][2] + 80 + 32, 40, 30, gfx.COLOR_INDIGO, 0.3 + lightAlpha)
-    for _, moon in ipairs(currentMoons) do
+function M.draw(dt)
+    lightAlpha = updateAlpha(lightAlpha, dt)
+    for i, moon in ipairs(currentMoons) do
+        if i == 3 then
+            ScreenScroll.tri_fill(currentMoons[3][1] - 50 + 32, currentMoons[3][2] + 90 + 32, currentMoons[3][1] + 32, currentMoons[3][2] + 13, currentMoons[3][1] + 50 + 32, currentMoons[3][2] + 90 + 32, 11, 0.3 + lightAlpha)
+        end
         ScreenScroll.sspr(moon[3], moon[4], moon[5], moon[6], moon[1], moon[2], 1)
     end
 end
@@ -70,7 +75,5 @@ end
 function M.getPos(n)
     return currentMoons[n][1], currentMoons[n][2]
 end
-
-
 
 return M
