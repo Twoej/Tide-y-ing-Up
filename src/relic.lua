@@ -37,8 +37,8 @@ end
 
 function M.init()
     addToRelicList(50, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
-    addToRelicList(80, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
-    addToRelicList(110, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
+    addToRelicList(80, 50, 80, 0, false, 6, 16, 16, AssignId(), false, true)
+    addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true)
     addToRelicList(150, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
     addToRelicList(170, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)
     addToRelicList(190, 50, 64, 0, false, 5, 16, 16, AssignId(), false, true)

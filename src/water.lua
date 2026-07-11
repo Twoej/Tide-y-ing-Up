@@ -22,6 +22,9 @@ local greaterGravDistance = 100
 local yMax = 60
 local yMin = 170
 
+local xWater = 200
+local yWater = 200
+
 function M.init()
     rectCount = waterSize / rectWidth
     for i = 1, rectCount do
@@ -59,7 +62,7 @@ local function processPoints(dt)
             end
         end
         local gravity = gravityCalc(i)
-        local centerpoint = 100 + gravity
+        local centerpoint = yWater + gravity
         local y = centerpoint
         if (i ~= 1 and i ~= rectCount and prevYpoints[i + 1] ~= nil and prevYpoints[i - 1] ~= nil) then
             y = ((prevYpoints[i - 1] + prevYpoints[i + 1]) / 2) + gravity
@@ -118,7 +121,7 @@ end
 
 function M.draw()
     for i = 1, rectCount do
-        ScreenScroll.rect_fill((rectWidth * i) - rectWidth, ypoints[i], rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
+        ScreenScroll.rect_fill((rectWidth * i) - rectWidth + xWater, ypoints[i], rectWidth, 320 - ypoints[i], gfx.COLOR_DARK_BLUE,
             1)
     end
 end

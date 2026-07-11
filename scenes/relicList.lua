@@ -2,6 +2,7 @@ local M = {}
 
 local Relic = require("src.relic")
 local MouseHandler = require("src.mouseHandler")
+local ScreenScroll = require("src.screenScroll")
 
 local page = 1
 
@@ -18,11 +19,12 @@ local function clicked(n)
 end
 
 function M.init()
+    local xScreen, yScreen = ScreenScroll.getScreenLocation()
     MouseHandler.storeAndClearList()
     rightArrowId = AssignId()
     leftArrowId = AssignId()
-    MouseHandler.addToClickable(280, 146, 30, 18, MouseHandler.getClickableCount() + 1, rightArrowId, clicked)
-    MouseHandler.addToClickable(10, 146, 30, 18, MouseHandler.getClickableCount() + 1, leftArrowId, clicked)
+    MouseHandler.addToClickable(280 + xScreen, 146 + yScreen, 30, 18, MouseHandler.getClickableCount() + 1, rightArrowId, clicked)
+    MouseHandler.addToClickable(10 + xScreen, 146 + yScreen, 30, 18, MouseHandler.getClickableCount() + 1, leftArrowId, clicked)
 end
 
 function M.close()
