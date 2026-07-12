@@ -40,6 +40,7 @@ local function clicked(n)
         if (relic[5] == n) then
             relicList[i]["found"] = true
             relicList[i]["fading"] = true
+            relicList[i]["attachedToMoonx"] = nil
             MouseHandler.removeFromClickable(n)
             return
         end
@@ -49,24 +50,8 @@ end
 function M.init()
     addToRelicList(50, 124, 64, 0, false, 5, 16, 16, AssignId(), false, true, false)
     addToRelicList(70, 303, 224, 0, false, 15, 16, 16, AssignId(), false, true, false)
-    --
-    --
-    --
     addToRelicList(220, 314, 80, 16, false, 46, 16, 16, AssignId(), false, true, false)
-    --
-    --
-    --
-    --
-    -- )
-    -- )
-    -- )
-    --
-    --
-    --
     addToRelicList(398, 269, 200, 24, true, 47, 24, 24, AssignId(), false, true, false)
-    -- addToRelicList(430, 50, 240, 0, false, 16, 16, 16, AssignId(), false, true, false)
-    --
-    -- addToRelicList(470, 50, 224, 32, false, 95, 16, 16, AssignId(), false, true, false)
 
     for _, relic in ipairs(relicList) do
         if (relic["visible"]) then
@@ -95,16 +80,17 @@ local function unlockRelics1()
 end
 
 local function unlockRelics2()
-    addToRelicList(15, 199, 80, 0, false, 6, 16, 16, AssignId(), false, true, true)
-    addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true, false)
-    addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true, false)
-    addToRelicList(230, 50, 80, 32, false, 86, 16, 16, AssignId(), false, true, false)
-    addToRelicList(270, 50, 64, 48, false, 125, 16, 16, AssignId(), false, true, false)
-    addToRelicList(290, 50, 80, 48, false, 126, 16, 16, AssignId(), false, true, false)
-    addToRelicList(310, 50, 96, 48, false, 127, 16, 16, AssignId(), false, true, false)
-    addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true, false)
-    addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true, false)
-    addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true, false)
+    addToRelicList(15, 175, 80, 0, false, 6, 16, 16, AssignId(), false, true, true) --done
+    addToRelicList(93, 148, 96, 0, false, 7, 16, 16, AssignId(), false, false, false)    --done
+    addToRelicList(133, 147, 64, 16, false, 45, 16, 16, AssignId(), false, true, true)  --done
+    addToRelicList(247, 318, 64, 48, false, 125, 16, 16, AssignId(), false, false, true)    --done
+    addToRelicList(166, 135, 80, 48, false, 126, 16, 16, AssignId(), false, true, false)    --Hand - boat
+    addToRelicList(529, 227, 96, 48, false, 127, 16, 16, AssignId(), false, false, true)    --done
+    addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true, false)    --Crown - moon
+    addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true, false)    --Necklace
+    addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true, false)  --Hat - boat
+    addToRelicList(307, 272, 240, 0, false, 16, 16, 16, AssignId(), false, false, false)  --Pelvis - done
+    addToRelicList(166, 135, 224, 32, false, 95, 16, 16, AssignId(), false, false, false)   --done
 end
 
 function M.update(dt)
@@ -121,7 +107,6 @@ function M.update(dt)
             if (math.abs((xMoon2 + 16) - (relic[1] + (relic[6] / 2))) < 8) then
                 relic["magnetized"] = true
                 relic["magnetizedTime"] = Time
-                relic["visible"] = true
             end
         end
         if (relic["magnetized"]) then
@@ -132,7 +117,10 @@ function M.update(dt)
                 Moon.isMagenetizing(false)
                 goto continue
             end
-            if (timeSinceMagnetize > 1) then
+            if (timeSinceMagnetize > 1 and relic["attachedToMoonx"] == nil and not relic["found"]) then
+                if (not relic["visible"]) then
+                    relic["visible"] = true
+                end
                 Moon.isMagenetizing(true)
                 ScreenScroll.screenShake()
                 relic[2] -= 40 * dt
@@ -175,6 +163,14 @@ function M.update(dt)
         unlockRelics2()
         relicUnlockTime = Time
         Moon.moveMoon(2, 288, 10)
+    end
+    if (usagi.IS_DEV and input.key_pressed(input.KEY_L)) then
+        for i, relic in ipairs(relicList) do
+            if (not relic["found"]) then
+                clicked(relic[5])
+                break
+            end
+        end
     end
 end
 
@@ -226,6 +222,14 @@ function M.setVisible(n, visible)
     else
         MouseHandler.removeFromClickable(relicList[n][5])
     end
+end
+
+
+function M.setMagnetic(n, magnetic)
+    if(relicList[n] == nil) then
+        return
+    end
+    relicList[n]["magnetic"] = magnetic
 end
 
 

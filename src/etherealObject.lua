@@ -6,16 +6,16 @@ local Relic = require("src.relic")
 
 local objects = {}
 
-local function addObject(x, y, sx, sy, w, h, alpha, visible, relic)
-    local t = { x, y, sx, sy, w, h, ["alpha"] = alpha, ["visible"] = visible, ["relic"] = relic }
+local function addObject(x, y, sx, sy, w, h, alpha, visible, relic, buriedRelic)
+    local t = { x, y, sx, sy, w, h, ["alpha"] = alpha, ["visible"] = visible, ["relic"] = relic, ["buriedRelic"] = buriedRelic}
     table.insert(objects, t)
 end
 
 function M.init()
-    addObject(85, 100, 336, 0, 32, 32, 1, true, 6)
-    addObject(157, 98, 336, 0, 32, 32, 1, true, 8)
-    addObject(296, 249, 336, 0, 32, 32, 1, true, 5)
-    addObject(579, 269, 336, 0, 32, 32, 1, true, 7)
+    addObject(85, 100, 336, 0, 32, 32, 1, true, 6, 10)
+    addObject(157, 98, 336, 0, 32, 32, 1, true, 8, 19)
+    addObject(296, 249, 336, 0, 32, 32, 1, true, 5, 18)
+    addObject(579, 269, 336, 0, 32, 32, 1, true, 7, nil)
 end
 
 local function inLight(x1, y1, x3)
@@ -33,6 +33,9 @@ local function inLight(x1, y1, x3)
         table.insert(litObjects, i)
         if (obj["relic"] ~= nil) then
             Relic.setVisible(obj["relic"], true)
+        end
+        if (obj["buriedRelic"] ~= nil) then
+            Relic.setMagnetic(obj["buriedRelic"], true)
         end
         ::continue::
     end
@@ -54,8 +57,13 @@ function M.update(dt)
         end
         if (obj["alpha"] < 1) then
             obj["alpha"] += (dt * obj["alpha"]) + (dt / 20)
-        elseif(obj["relic"] ~= nil) then
-            Relic.setVisible(obj["relic"], false)
+        else
+            if (obj["relic"] ~= nil) then
+                Relic.setVisible(obj["relic"], false)
+            end
+            if (obj["buriedRelic"] ~= nil) then
+                Relic.setMagnetic(obj["buriedRelic"], false)
+            end
         end
         ::continue::
     end
