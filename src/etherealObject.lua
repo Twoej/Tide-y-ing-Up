@@ -12,8 +12,10 @@ local function addObject(x, y, sx, sy, w, h, alpha, visible, relic)
 end
 
 function M.init()
-    --addObject(30, 100, 336, 0, 32, 32, 1, true, nil)
-    --addObject(62, 100, 336, 0, 32, 32, 1, true, nil)
+    addObject(85, 100, 336, 0, 32, 32, 1, true, 6)
+    addObject(157, 98, 336, 0, 32, 32, 1, true, 8)
+    addObject(296, 249, 336, 0, 32, 32, 1, true, 5)
+    addObject(579, 269, 336, 0, 32, 32, 1, true, 7)
 end
 
 local function inLight(x1, y1, x3)

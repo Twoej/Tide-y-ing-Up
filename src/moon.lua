@@ -30,6 +30,7 @@ local function dropped(n)
 end
 
 function recursionfix.clicked(n)
+    if (n == 2 and magnetizing) then return end
     initialMousePos[1], initialMousePos[2] = input.mouse()
     initialMoonPos[1], initialMoonPos[2] = currentMoons[n][1], currentMoons[n][2]
     initialScreenPos[1], initialScreenPos[2] = ScreenScroll.getScreenLocation()

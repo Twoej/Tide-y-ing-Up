@@ -49,20 +49,20 @@ end
 function M.init()
     addToRelicList(50, 124, 64, 0, false, 5, 16, 16, AssignId(), false, true, false)
     addToRelicList(70, 303, 224, 0, false, 15, 16, 16, AssignId(), false, true, false)
-    --addToRelicList(100, 150, 80, 0, false, 6, 16, 16, AssignId(), false, true, true)
-    --addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true, false)
-    --addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true, false)
+    --
+    --
+    --
     addToRelicList(220, 314, 80, 16, false, 46, 16, 16, AssignId(), false, true, false)
     --
     --
-    -- addToRelicList(230, 50, 80, 32, false, 86, 16, 16, AssignId(), false, true, false)
     --
-    -- addToRelicList(270, 50, 64, 48, false, 125, 16, 16, AssignId(), false, true, false)
-    -- addToRelicList(290, 50, 80, 48, false, 126, 16, 16, AssignId(), false, true, false)
-    -- addToRelicList(310, 50, 96, 48, false, 127, 16, 16, AssignId(), false, true, false)
-    -- addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true, false)
-    -- addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true, false)
-    -- addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true, false)
+    --
+    -- )
+    -- )
+    -- )
+    --
+    --
+    --
     addToRelicList(398, 269, 200, 24, true, 47, 24, 24, AssignId(), false, true, false)
     -- addToRelicList(430, 50, 240, 0, false, 16, 16, 16, AssignId(), false, true, false)
     --
@@ -88,10 +88,23 @@ local function foundRelicCount()
 end
 
 local function unlockRelics1()
-    addToRelicList(190, 50, 96, 16, false, 47, 16, 16, AssignId(), false, true, false)
-    addToRelicList(210, 50, 64, 32, false, 85, 16, 16, AssignId(), false, true, false)
-    addToRelicList(250, 50, 96, 32, false, 87, 16, 16, AssignId(), false, true, false)
-    addToRelicList(450, 50, 224, 16, false, 55, 16, 16, AssignId(), false, true, false)
+    addToRelicList(306, 263, 96, 16, false, 47, 16, 16, AssignId(), false, false, false)
+    addToRelicList(93, 109, 64, 32, false, 85, 16, 16, AssignId(), false, false, false)
+    addToRelicList(587, 270, 96, 32, false, 87, 16, 16, AssignId(), false, false, false)
+    addToRelicList(165, 106, 224, 16, false, 55, 16, 16, AssignId(), false, false, false)
+end
+
+local function unlockRelics2()
+    addToRelicList(15, 199, 80, 0, false, 6, 16, 16, AssignId(), false, true, true)
+    addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true, false)
+    addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true, false)
+    addToRelicList(230, 50, 80, 32, false, 86, 16, 16, AssignId(), false, true, false)
+    addToRelicList(270, 50, 64, 48, false, 125, 16, 16, AssignId(), false, true, false)
+    addToRelicList(290, 50, 80, 48, false, 126, 16, 16, AssignId(), false, true, false)
+    addToRelicList(310, 50, 96, 48, false, 127, 16, 16, AssignId(), false, true, false)
+    addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true, false)
+    addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true, false)
+    addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true, false)
 end
 
 function M.update(dt)
@@ -157,6 +170,12 @@ function M.update(dt)
         relicUnlockTime = Time
         Moon.moveMoon(3, 288, 10)
     end
+    if foundRelicCount() >= 6 and not relicUnlock2 then
+        relicUnlock2 = true
+        unlockRelics2()
+        relicUnlockTime = Time
+        Moon.moveMoon(2, 288, 10)
+    end
 end
 
 function M.draw()
@@ -196,6 +215,9 @@ function M.getRelicListLength()
 end
 
 function M.setVisible(n, visible)
+    if (relicList[n] == nil) then
+        return
+    end
     relicList[n]["visible"] = visible
     if visible then
         MouseHandler.addToClickable(relicList[n][1], relicList[n][2], relicList[n][6], relicList[n][7], MouseHandler.getClickableCount() + 1,
