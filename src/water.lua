@@ -8,21 +8,21 @@ local prevYpoints = {}
 local defaultChance = 0.5
 local waveChance = 0.25
 local riseChance = 0
-local riseIntensity = 0.006
+local riseIntensity = 0.005
 local waterSize = 450
 local rectWidth = 2
 local rectCount = 0
 local waves = false
 local rise = true
-local gravEffect = 15
+local gravEffect = 18
 local baseGrav = 0.40
 local reverseGravEffect = 0.004
-local gravDistance = 30
-local greaterGravDistance = 100
+local gravDistance = 80
+local greaterGravDistance = 120
 local yMax = 60
-local yMin = 360
+local yMin = 250
 
-local xWater = 200
+local xWater = 190
 local yWater = 100
 
 function M.init()
@@ -37,11 +37,11 @@ local function gravityCalc(waterIndex)
     local moonPos = { 0, 0 }
     moonPos["x"], moonPos["y"] = Moon.getPos(1)
     local yDist = math.abs(moonPos["y"] - prevYpoints[waterIndex])
-    local gravity = 0
-    if (yDist > 70) then
-        return gravity
-    end
     local xDist = math.abs(moonPos["x"] - (waterIndex * rectWidth) - xWater)
+    local gravity = 0
+    if (yDist > (225 - prevYpoints[waterIndex]) and moonPos["x"] < 180) then
+        return ((yWater - prevYpoints[waterIndex]) / 200)
+    end
     local dist = math.sqrt((xDist ^ 2) + (yDist ^ 2))
     if (xDist < gravDistance) then
         gravity -= ((gravEffect * (1 / dist)) + baseGrav)
@@ -49,7 +49,7 @@ local function gravityCalc(waterIndex)
         gravity += (reverseGravEffect * dist) - baseGrav
     end
     if (xDist < greaterGravDistance and xDist > gravDistance) then
-        gravity -= gravEffect * (2 / dist)
+        gravity -= ((gravEffect * (2 / dist)) + baseGrav)
     end
     return gravity
 end
@@ -90,7 +90,7 @@ local function processPoints(dt)
         if (math.random() < defaultChance) then
             y += math.random(-1, 1)
         end
-        if (Time > 10 and rise) then
+        if (rise) then
             if (Time % 5 < 2.5) then
                 riseChance += riseIntensity * dt
             else

@@ -12,8 +12,8 @@ local function addObject(x, y, sx, sy, w, h, alpha, visible, relic)
 end
 
 function M.init()
-    addObject(30, 100, 336, 0, 32, 32, 1, true, 1)
-    addObject(62, 100, 336, 0, 32, 32, 1, true, nil)
+    --addObject(30, 100, 336, 0, 32, 32, 1, true, nil)
+    --addObject(62, 100, 336, 0, 32, 32, 1, true, nil)
 end
 
 local function inLight(x1, y1, x3)
@@ -65,6 +65,10 @@ function M.draw()
             ScreenScroll.sspr(obj[3], obj[4], obj[5], obj[6], obj[1], obj[2], obj["alpha"], false)
         end
     end
+end
+
+function M.drawOver()
+
 end
 
 

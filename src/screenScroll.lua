@@ -92,8 +92,31 @@ function M.tri_fill(x1, y1, x2, y2, x3, y3, color, alpha)
     end
 end
 
+function M.circ(x, y, r, color, alpha)
+    if (checkIfDraw(x - r, y - r, x + r, y + r)) then
+        gfx.circ(x - screenLocation["x"], y - screenLocation["y"], r, color, alpha)
+    end
+end
+
 function M.getScreenLocation()
     return screenLocation["x"], screenLocation["y"]
+end
+
+function M.screenShake()
+    screenLocation["x"] += math.random(-1, 1)
+    if (screenLocation["x"] < screenBorders["left"]) then
+        screenLocation["x"] = screenBorders["left"]
+    end
+    if (screenLocation["x"] > screenBorders["right"]) then
+        screenLocation["x"] = screenBorders["left"]
+    end
+    screenLocation["y"] += math.random(-1, 1)
+    if (screenLocation["y"] < screenBorders["up"]) then
+        screenLocation["y"] = screenBorders["up"]
+    end
+    if (screenLocation["y"] > screenBorders["down"]) then
+        screenLocation["y"] = screenBorders["down"]
+    end
 end
 
 return M

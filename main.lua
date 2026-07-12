@@ -9,7 +9,7 @@ local scenes = { MainMenu = require("scenes.mainMenu"), Game = require("scenes.g
 
 Time = 0
 
-local currentIdNumber = 0
+local currentIdNumber = 4
 
 function AssignId()
     currentIdNumber += 1

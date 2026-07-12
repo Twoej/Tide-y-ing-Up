@@ -2,10 +2,17 @@ local M = {}
 
 local ScreenScroll = require("src.screenScroll")
 local MouseHandler = require("src.mouseHandler")
+local Moon = require("src.moon")
 
 local relicList = {}
 
-local function addToRelicList(x, y, sx, sy, ssprite, spridx, w, h, id, found, visible)
+local relicUnlock1 = false
+local relicUnlock2 = false
+local relicUnlockTime = -20
+
+local textAlpha = 0
+
+local function addToRelicList(x, y, sx, sy, ssprite, spridx, w, h, id, found, visible, magnetic)
     local t = {
         x,
         y,
@@ -19,7 +26,11 @@ local function addToRelicList(x, y, sx, sy, ssprite, spridx, w, h, id, found, vi
         h,
         spridx,
         ["fading"] = false,
-        ["alpha"] = 1
+        ["alpha"] = 1,
+        ["magnetic"] = magnetic,
+        ["magnetized"] = false,
+        ["magnetizedTime"] = 0,
+        ["attachedToMoonx"] = nil
     }
     table.insert(relicList, t)
 end
@@ -36,26 +47,26 @@ local function clicked(n)
 end
 
 function M.init()
-    addToRelicList(40, 110, 64, 0, false, 5, 16, 16, AssignId(), false, false)
-    addToRelicList(80, 50, 80, 0, false, 6, 16, 16, AssignId(), false, true)
-    addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true)
-    addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true)
-    addToRelicList(170, 50, 80, 16, false, 46, 16, 16, AssignId(), false, true)
-    addToRelicList(190, 50, 96, 16, false, 47, 16, 16, AssignId(), false, true)
-    addToRelicList(210, 50, 64, 32, false, 85, 16, 16, AssignId(), false, true)
-    addToRelicList(230, 50, 80, 32, false, 86, 16, 16, AssignId(), false, true)
-    addToRelicList(250, 50, 96, 32, false, 87, 16, 16, AssignId(), false, true)
-    addToRelicList(270, 50, 64, 48, false, 125, 16, 16, AssignId(), false, true)
-    addToRelicList(290, 50, 80, 48, false, 126, 16, 16, AssignId(), false, true)
-    addToRelicList(310, 50, 96, 48, false, 127, 16, 16, AssignId(), false, true)
-    addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true)
-    addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true)
-    addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true)
-    addToRelicList(390, 50, 200, 24, true, 47, 24, 24, AssignId(), false, true)
-    addToRelicList(410, 50, 224, 0, false, 15, 16, 16, AssignId(), false, true)
-    addToRelicList(430, 50, 240, 0, false, 16, 16, 16, AssignId(), false, true)
-    addToRelicList(450, 50, 224, 16, false, 55, 16, 16, AssignId(), false, true)
-    addToRelicList(470, 50, 224, 32, false, 95, 16, 16, AssignId(), false, true)
+    addToRelicList(50, 124, 64, 0, false, 5, 16, 16, AssignId(), false, true, false)
+    addToRelicList(70, 303, 224, 0, false, 15, 16, 16, AssignId(), false, true, false)
+    --addToRelicList(100, 150, 80, 0, false, 6, 16, 16, AssignId(), false, true, true)
+    --addToRelicList(110, 50, 96, 0, false, 7, 16, 16, AssignId(), false, true, false)
+    --addToRelicList(150, 50, 64, 16, false, 45, 16, 16, AssignId(), false, true, false)
+    addToRelicList(220, 314, 80, 16, false, 46, 16, 16, AssignId(), false, true, false)
+    --
+    --
+    -- addToRelicList(230, 50, 80, 32, false, 86, 16, 16, AssignId(), false, true, false)
+    --
+    -- addToRelicList(270, 50, 64, 48, false, 125, 16, 16, AssignId(), false, true, false)
+    -- addToRelicList(290, 50, 80, 48, false, 126, 16, 16, AssignId(), false, true, false)
+    -- addToRelicList(310, 50, 96, 48, false, 127, 16, 16, AssignId(), false, true, false)
+    -- addToRelicList(330, 50, 176, 0, true, 0, 24, 24, AssignId(), false, true, false)
+    -- addToRelicList(350, 50, 200, 0, true, 0, 24, 24, AssignId(), false, true, false)
+    -- addToRelicList(370, 50, 176, 24, true, 46, 24, 24, AssignId(), false, true, false)
+    addToRelicList(398, 269, 200, 24, true, 47, 24, 24, AssignId(), false, true, false)
+    -- addToRelicList(430, 50, 240, 0, false, 16, 16, 16, AssignId(), false, true, false)
+    --
+    -- addToRelicList(470, 50, 224, 32, false, 95, 16, 16, AssignId(), false, true, false)
 
     for _, relic in ipairs(relicList) do
         if (relic["visible"]) then
@@ -66,7 +77,25 @@ function M.init()
     end
 end
 
+local function foundRelicCount()
+    local count = 0
+    for _, relic in ipairs(relicList) do
+        if (relic["found"]) then
+            count += 1
+        end
+    end
+    return count
+end
+
+local function unlockRelics1()
+    addToRelicList(190, 50, 96, 16, false, 47, 16, 16, AssignId(), false, true, false)
+    addToRelicList(210, 50, 64, 32, false, 85, 16, 16, AssignId(), false, true, false)
+    addToRelicList(250, 50, 96, 32, false, 87, 16, 16, AssignId(), false, true, false)
+    addToRelicList(450, 50, 224, 16, false, 55, 16, 16, AssignId(), false, true, false)
+end
+
 function M.update(dt)
+    local xMoon2, yMoon2 = Moon.getPos(2)
     for _, relic in ipairs(relicList) do
         if (relic["fading"]) then
             relic["alpha"] -= dt
@@ -75,6 +104,58 @@ function M.update(dt)
                 relic["fading"] = false
             end
         end
+        if (relic["magnetic"] and not relic["magnetized"]) then
+            if (math.abs((xMoon2 + 16) - (relic[1] + (relic[6] / 2))) < 8) then
+                relic["magnetized"] = true
+                relic["magnetizedTime"] = Time
+                relic["visible"] = true
+            end
+        end
+        if (relic["magnetized"]) then
+            local timeSinceMagnetize = Time - relic["magnetizedTime"]
+            if (math.abs((xMoon2 + 16) - (relic[1] + (relic[6] / 2))) < 8) then
+            else
+                relic["magnetized"] = false
+                Moon.isMagenetizing(false)
+                goto continue
+            end
+            if (timeSinceMagnetize > 1) then
+                Moon.isMagenetizing(true)
+                ScreenScroll.screenShake()
+                relic[2] -= 40 * dt
+                MouseHandler.removeFromClickable(relic[5])
+                MouseHandler.addToClickable(relic[1], relic[2], relic[6], relic[7], MouseHandler.getClickableCount() + 1,
+                    relic[5],
+                    clicked)
+                if relic[2] <= (yMoon2 + 30) then
+                    relic[2] = yMoon2 + 30
+                    relic["magnetized"] = false
+                    Moon.isMagenetizing(false)
+                    relic["magnetic"] = false
+                    relic["attachedToMoonx"] = relic[1] - xMoon2
+                end
+                relic["magnetizedTime"] += 0.067
+            end
+        end
+        ::continue::
+        if (relic["attachedToMoonx"] ~= nil) then
+            if (relic[1] ~= relic["attachedToMoonx"] + xMoon2) then
+                relic[1] = relic["attachedToMoonx"] + xMoon2
+            end
+            if (relic[2] ~= (yMoon2 + 30)) then
+                relic[2] = yMoon2 + 30
+            end
+            MouseHandler.removeFromClickable(relic[5])
+            MouseHandler.addToClickable(relic[1], relic[2], relic[6], relic[7], MouseHandler.getClickableCount() + 1,
+                relic[5],
+                clicked)
+        end
+    end
+    if foundRelicCount() >= 3 and not relicUnlock1 then
+        relicUnlock1 = true
+        unlockRelics1()
+        relicUnlockTime = Time
+        Moon.moveMoon(3, 288, 10)
     end
 end
 
@@ -87,6 +168,18 @@ function M.draw()
                 ScreenScroll.spr(relic[8], relic[1], relic[2], relic["alpha"])
             end
         end
+    end
+end
+
+function M.drawOver(dt)
+    ScreenScroll.sspr(relicList[2][3], relicList[2][4], relicList[2][6], relicList[2][7], relicList[2][1], relicList[2][2], relicList[2]["alpha"])
+    if (Time - relicUnlockTime < 5) then
+        if (Time - relicUnlockTime < 2.5) then
+            textAlpha += dt
+        else
+            textAlpha -= dt
+        end
+        gfx.text("There is a new moon in the sky!", 55, 165, gfx.COLOR_WHITE, textAlpha)
     end
 end
 
@@ -112,5 +205,7 @@ function M.setVisible(n, visible)
         MouseHandler.removeFromClickable(relicList[n][5])
     end
 end
+
+
 
 return M

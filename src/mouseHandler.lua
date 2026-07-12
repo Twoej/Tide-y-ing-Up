@@ -16,6 +16,8 @@ function M.checkMouseClick()
         local mousePos = { 0, 0 }
         local clicked = {}
         mousePos["x"], mousePos["y"] = input.mouse()
+        print(mousePos["x"] + xScreen)
+        print(mousePos["y"] + yScreen)
         for i = 1, #clickable do
             if (mousePos["x"] > (clickable[i][1] - xScreen) and mousePos["x"] < (clickable[i][1] + clickable[i][3] - xScreen) and mousePos["y"] > (clickable[i][2] - yScreen) and mousePos["y"] < (clickable[i][2] + clickable[i][4] - yScreen)) then
                 table.insert(clicked, i)

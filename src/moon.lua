@@ -13,6 +13,8 @@ local initialScreenPos = { 0, 0 }
 
 local lightAlpha = 0
 
+local magnetizing
+
 local function holding(n)
     local xMouse, yMouse = input.mouse()
     local xScreen, yScreen = ScreenScroll.getScreenLocation()
@@ -37,16 +39,13 @@ end
 function M.addMoon(x, y, sx, sy, w, h, id)
     local obj = { x, y, sx, sy, w, h, id }
     table.insert(currentMoons, id, obj)
+    MouseHandler.addToClickable(x, y, w, h, MouseHandler.getClickableCount() + 1, id, recursionfix.clicked)
 end
 
 function M.init()
-    M.addMoon(20, 20, 0, 0, 64, 64, AssignId())
-    MouseHandler.addToClickable(20, 20, 64, 64, MouseHandler.getClickableCount() + 1, currentMoons[1][7], recursionfix.clicked)
-    M.addMoon(100, 20, 240, 16, 32, 32, AssignId())
-    MouseHandler.addToClickable(100, 20, 32, 32, MouseHandler.getClickableCount() + 1, currentMoons[2][7],
-        recursionfix.clicked)
-    M.addMoon(180, 20, 272, 0, 64, 64, AssignId())
-    MouseHandler.addToClickable(180, 20, 64, 64, MouseHandler.getClickableCount() + 1, currentMoons[3][7], recursionfix.clicked)
+    M.addMoon(30, 10, 0, 0, 64, 64, AssignId())
+    M.addMoon(-50, 400, 240, 16, 32, 32, AssignId())
+    M.addMoon(-50, 400, 272, 0, 64, 64, AssignId())
 end
 
 local function updateAlpha(alpha, dt)
@@ -65,6 +64,16 @@ end
 function M.draw(dt)
     lightAlpha = updateAlpha(lightAlpha, dt)
     for i, moon in ipairs(currentMoons) do
+        if (i == 2 and magnetizing) then
+            local tenthsOfSecond = math.floor((Time * 10) % 10)
+            local baseRadius = 16
+            if (tenthsOfSecond <= 2 or (tenthsOfSecond <= 6 and tenthsOfSecond > 4)) then
+                baseRadius = 17
+            end
+            ScreenScroll.circ(currentMoons[2][1] + 16, currentMoons[2][2] + 16, baseRadius, 9, 0.6)
+            ScreenScroll.circ(currentMoons[2][1] + 16, currentMoons[2][2] + 16, baseRadius + 2, 9, 0.4)
+            ScreenScroll.circ(currentMoons[2][1] + 16, currentMoons[2][2] + 16, baseRadius + 4, 9, 0.2)
+        end
         if i == 3 then
             ScreenScroll.tri_fill(currentMoons[3][1] - 50 + 32, currentMoons[3][2] + 90 + 32, currentMoons[3][1] + 32, currentMoons[3][2] + 13, currentMoons[3][1] + 50 + 32, currentMoons[3][2] + 90 + 32, 11, 0.3 + lightAlpha)
         end
@@ -74,6 +83,17 @@ end
 
 function M.getPos(n)
     return currentMoons[n][1], currentMoons[n][2]
+end
+
+function M.isMagenetizing(currentlyMagnetizing)
+    magnetizing = currentlyMagnetizing
+end
+
+function M.moveMoon(n, x, y)
+    currentMoons[n][1] = x
+    currentMoons[n][2] = y
+    MouseHandler.removeFromClickable(n)
+    MouseHandler.addToClickable(x, y, currentMoons[n][5], currentMoons[n][6], MouseHandler.getClickableCount() + 1, n, recursionfix.clicked)
 end
 
 return M

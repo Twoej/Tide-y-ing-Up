@@ -34,10 +34,12 @@ end
 
 function M.draw(dt)
     ScreenScroll.sspr(0, 64, 640, 360, 0, 0, 1, true)
+    Moon.draw(dt)
     Relic.draw()
     EtherealObject.draw()
-    Moon.draw(dt)
     Water.draw()
+    ScreenScroll.sspr(0, 424, 640, 360, 0, 0, 1, true)
+    Relic.drawOver(dt)
 end
 
 return M
