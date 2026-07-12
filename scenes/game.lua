@@ -12,8 +12,11 @@ function M.init()
     -- Live reload preserves globals across saved edits but resets locals.
     -- Stash mutable game state in a capitalized global like `State` so it
     -- survives reloads; F5 calls _init again to reset.
+    print("here1")
     Moon.init()
+    print("here2")
     Water.init()
+    print("here3")
     Relic.init()
     EtherealObject.init()
 end
