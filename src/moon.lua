@@ -2,6 +2,8 @@ local M = {}
 
 local MouseHandler = require("src.mouseHandler")
 local ScreenScroll = require("src.screenScroll")
+local EtherealObject = {}
+local Relic = {}
 
 local currentMoons = {}
 
@@ -20,6 +22,21 @@ local function holding(n)
     local xScreen, yScreen = ScreenScroll.getScreenLocation()
     currentMoons[n][1] = initialMoonPos[1] + xMouse - initialMousePos[1] + xScreen - initialScreenPos[1]
     currentMoons[n][2] = initialMoonPos[2] + yMouse - initialMousePos[2] + yScreen - initialScreenPos[2]
+    local halfDim = currentMoons[n][5] / 2
+    local centerPosX = currentMoons[n][1] + halfDim
+    local centerPosY = currentMoons[n][2] + halfDim
+    if (centerPosX > 640) then
+        currentMoons[n][1] = 640 - halfDim
+    elseif (centerPosX < 0) then
+        currentMoons[n][1] = 0 - halfDim
+    end
+    if (centerPosY < 0) then
+        currentMoons[n][2] = 0 - halfDim
+    elseif (centerPosY > 134 and centerPosX < 216) then
+        currentMoons[n][2] = 134 - halfDim
+    elseif (centerPosY + (0.5 * halfDim) > 266 and centerPosX >= 216) then
+        currentMoons[n][2] = 266 - (1.5 * halfDim)
+    end
 end
 
 local function dropped(n)
@@ -38,7 +55,7 @@ function recursionfix.clicked(n)
 end
 
 function M.addMoon(x, y, sx, sy, w, h, id)
-    local obj = { x, y, sx, sy, w, h, id }
+    local obj = { x, y, sx, sy, w, h, id, 1 }
     table.insert(currentMoons, id, obj)
     MouseHandler.addToClickable(x, y, w, h, MouseHandler.getClickableCount() + 1, id, recursionfix.clicked)
 end
@@ -47,6 +64,8 @@ function M.init()
     M.addMoon(30, 10, 0, 0, 64, 64, AssignId())
     M.addMoon(-50, 400, 240, 16, 32, 32, AssignId())
     M.addMoon(-50, 400, 272, 0, 64, 64, AssignId())
+    EtherealObject = require("src.etherealObject")
+    Relic = require("src.relic")
 end
 
 local function updateAlpha(alpha, dt)
@@ -78,7 +97,7 @@ function M.draw(dt)
         if i == 3 then
             ScreenScroll.tri_fill(currentMoons[3][1] - 50 + 32, currentMoons[3][2] + 90 + 32, currentMoons[3][1] + 32, currentMoons[3][2] + 13, currentMoons[3][1] + 50 + 32, currentMoons[3][2] + 90 + 32, 11, 0.3 + lightAlpha)
         end
-        ScreenScroll.sspr(moon[3], moon[4], moon[5], moon[6], moon[1], moon[2], 1)
+        ScreenScroll.sspr(moon[3], moon[4], moon[5], moon[6], moon[1], moon[2], moon[8])
     end
 end
 
@@ -86,7 +105,10 @@ function M.getPos(n)
     return currentMoons[n][1], currentMoons[n][2]
 end
 
-function M.isMagenetizing(currentlyMagnetizing)
+function M.isMagnetizing(currentlyMagnetizing)
+    if magnetizing ~= currentlyMagnetizing and currentlyMagnetizing == true then
+        sfx.play_ex("magnetsound", 0.3, 1, 0)
+    end
     magnetizing = currentlyMagnetizing
 end
 
@@ -95,6 +117,12 @@ function M.moveMoon(n, x, y)
     currentMoons[n][2] = y
     MouseHandler.removeFromClickable(n)
     MouseHandler.addToClickable(x, y, currentMoons[n][5], currentMoons[n][6], MouseHandler.getClickableCount() + 1, n, recursionfix.clicked)
+end
+
+function M.update()
+    EtherealObject.move(7, currentMoons[1][1] + 12, currentMoons[1][2] + 12)
+    currentMoons[1][8] = EtherealObject.getAlpha(7)
+    Relic.moveRelic(11, currentMoons[1][1] + 20, currentMoons[1][2] + 20)
 end
 
 return M

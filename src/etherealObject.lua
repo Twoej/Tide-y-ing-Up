@@ -12,10 +12,13 @@ local function addObject(x, y, sx, sy, w, h, alpha, visible, relic, buriedRelic)
 end
 
 function M.init()
-    addObject(85, 100, 336, 0, 32, 32, 1, true, 6, 10)
-    addObject(157, 98, 336, 0, 32, 32, 1, true, 8, 19)
-    addObject(296, 249, 336, 0, 32, 32, 1, true, 5, 18)
-    addObject(579, 269, 336, 0, 32, 32, 1, true, 7, nil)
+    addObject(87, 87, 402, 1, 30, 49, 1, true, 7, 13)
+    addObject(157, 90, 444, 7, 46, 34, 1, true, 9, 19)
+    addObject(301, 265, 368, 0, 24, 24, 1, true, 6, 18)
+    addObject(579, 265, 532, 7, 40, 23, 1, true, 8, nil)
+    addObject(566, 270, 402, 1, 30, 49, 1, true, nil, 17)
+    addObject(402, 195, 584, 424, 44, 30, 1, true, 10, nil)
+    addObject(30, 10, 584, 424, 40, 40, 1, true, 11, nil)
 end
 
 local function inLight(x1, y1, x3)
@@ -46,6 +49,9 @@ function M.update(dt)
     local xMoon, yMoon = Moon.getPos(3)
     local litObjects = inLight(xMoon - 50 + 32, yMoon + 90 + 32, xMoon + 50 + 32)
     for i = 1, #litObjects do
+        if (not sfx.is_playing("disappear") and objects[litObjects[i]]["alpha"] == 1) then
+            sfx.play_ex("disappear", 0.3, 1, 0)
+        end
         objects[litObjects[i]]["alpha"] -= dt
         if objects[litObjects[i]]["alpha"] < 0 then
             objects[litObjects[i]]["alpha"] = 0
@@ -57,6 +63,9 @@ function M.update(dt)
         end
         if (obj["alpha"] < 1) then
             obj["alpha"] += (dt * obj["alpha"]) + (dt / 20)
+            if (obj["alpha"] > 1) then
+                obj["alpha"] = 1
+            end
         else
             if (obj["relic"] ~= nil) then
                 Relic.setVisible(obj["relic"], false)
@@ -77,10 +86,13 @@ function M.draw()
     end
 end
 
-function M.drawOver()
-
+function M.getAlpha(n)
+    return objects[n]["alpha"]
 end
 
-
+function M.move(n, x, y)
+    objects[n][1] = x
+    objects[n][2] = y
+end
 
 return M

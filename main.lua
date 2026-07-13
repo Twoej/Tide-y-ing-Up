@@ -5,7 +5,7 @@ end
 
 local MouseHandler = require("src.mouseHandler")
 
-local scenes = { MainMenu = require("scenes.mainMenu"), Game = require("scenes.game"), RelicList = require("scenes.relicList") }
+local scenes = { MainMenu = require("scenes.mainMenu"), Game = require("scenes.game"), RelicList = require("scenes.relicList"), Museum = require("scenes.museum"), Credits = require("scenes.credits"), Intro = require("scenes.intro") }
 
 Time = 0
 
@@ -31,6 +31,7 @@ function _init()
 end
 
 function _update(dt)
+    Time += dt
     if (State.pendingScene) then
         if (State.currentScene) then
             scenes[State.currentScene].close()

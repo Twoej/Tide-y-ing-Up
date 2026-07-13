@@ -126,4 +126,11 @@ function M.draw()
     end
 end
 
+function M.getPoint(x)
+    if ((x - xWater) / rectWidth) > rectCount or ((x - xWater) / rectWidth) < 1 then
+        return yWater
+    end
+    return ypoints[math.floor((x - xWater) / rectWidth)]
+end
+
 return M

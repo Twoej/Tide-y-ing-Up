@@ -76,6 +76,12 @@ function M.spr(index, x, y, alpha)
     end
 end
 
+function M.sspr_ex(sx, sy, sw, sh, dx, dy, dw, dh, flip_x, flip_y, rotation, tint, alpha)
+    if (checkIfDraw(dx, dy, sw, sh)) then
+        gfx.sspr_ex(sx, sy, sw, sh, dx - screenLocation["x"], dy - screenLocation["y"], dw, dh, flip_x, flip_y, rotation, tint, alpha)
+    end
+end
+
 function M.tri_fill(x1, y1, x2, y2, x3, y3, color, alpha)
     local xMax = x1
     local xMin = x1
@@ -95,6 +101,12 @@ end
 function M.circ(x, y, r, color, alpha)
     if (checkIfDraw(x - r, y - r, x + r, y + r)) then
         gfx.circ(x - screenLocation["x"], y - screenLocation["y"], r, color, alpha)
+    end
+end
+
+function M.circ_fill(x, y, r, color, alpha)
+    if (checkIfDraw(x - r, y - r, x + r, y + r)) then
+        gfx.circ_fill(x - screenLocation["x"], y - screenLocation["y"], r, color, alpha)
     end
 end
 

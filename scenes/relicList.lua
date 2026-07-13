@@ -9,6 +9,8 @@ local page = 1
 local rightArrowId
 local leftArrowId
 
+local messageShowing = false
+
 local function clicked(n)
     if (n == rightArrowId and Relic.getRelicListLength() > page * 6) then
         page += 1
@@ -37,10 +39,17 @@ function M.update(dt)
     if (input.key_pressed(input.KEY_TAB)) then
         SwitchScenes("Game", false)
     end
+    if (input.key_pressed(input.KEY_SPACE) and Relic.getMessageFound()) then
+        if (messageShowing) then messageShowing = false else messageShowing = true end
+    end
 end
 
 function M.draw(dt)
     gfx.clear(gfx.COLOR_WHITE)
+    if (messageShowing) then
+        gfx.text("The message in the bottle:\nHidden beneath stone\nOn the western edge\nMy gold ye shall own\nIf moon ye can leverage", 75, 50, gfx.COLOR_BLACK, 1)
+        return
+    end
     gfx.text("Relic List", 131, 20, gfx.COLOR_BLACK, 1)
     for i = 1, 6 do
         if ((Relic.getRelicListLength() % 6) < i and math.floor(Relic.getRelicListLength() / 6) < page) then
@@ -62,6 +71,9 @@ function M.draw(dt)
     if (page > 1) then
         gfx.rect_fill(20, 150, 20, 9, gfx.COLOR_BLACK, 1)
         gfx.tri_fill(20, 146, 10, 155, 20, 164, gfx.COLOR_BLACK, 1)
+    end
+    if (Relic.getMessageFound()) then
+        gfx.text("Press spacebar to read the message in the bottle", 5, 0, gfx.COLOR_BLACK, 1)
     end
 end
 
